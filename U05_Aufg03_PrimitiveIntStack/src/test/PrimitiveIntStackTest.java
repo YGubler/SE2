@@ -12,6 +12,12 @@ import main.PrimitiveIntStack;
 
 public class PrimitiveIntStackTest {
 
+	/*
+	 * under Runconfig VM dies hineinkopieren damit C4J läuft -ea -javaagent:
+	 * "C:\Users\Yanick\Dropbox\Schule\HSR\Module\SE2\FS2016\00_Eigene\Workspace\U05_Aufg03_PrimitiveIntStack\libs\c4j-6.0.0-for-java-8.jar"
+	 * 
+	 */
+
 	private PrimitiveIntStack stack;
 
 	@Before
