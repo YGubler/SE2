@@ -1,0 +1,87 @@
+-- Autoren Janic Mikes und Yanick Gubler
+
+\echo 1. Zeige alle Filme die bereits gezeigt wurden
+\echo -----------------------------------------------------
+SELECT DISTINCT mov.name AS "Movie Name"
+FROM moviescreening msc
+JOIN movie mov ON mov.idmovie = msc.fkmovie
+WHERE msc.startTime < NOW();
+
+\echo 2. Zeige alle Kinovorführungen mit Details zum Film und dem Kinosaal
+\echo -----------------------------------------------------
+SELECT mov.name, msc.starttime, msc.starttime + (INTERVAL '1 min' * mov.duration) as endtime, mov.duration, cih.idcinemahall cinemahall, mov.fsk
+FROM moviescreening msc
+JOIN cinemahall cih ON cih.idcinemahall = msc.fkcinemahall
+JOIN movie mov ON mov.idmovie = msc.fkmovie;
+
+\echo 3. Kundennamen zu den Tickets anzeigen
+\echo -----------------------------------------------------
+SELECT
+tkt.ticketno,
+(SELECT prs.firstname FROM person prs WHERE prs.idperson = vis.idvisitor)
+FROM ticket tkt
+JOIN visitor vis ON vis.idvisitor = tkt.fkvisitor;
+
+\echo 4. Wievielmal wurde welcher Film besucht
+\echo -----------------------------------------------------
+SELECT mov.name, count(tkt.idticket)
+FROM ticket tkt
+JOIN moviescreening msc ON msc.idmoviescreening = tkt.fkmoviescreening
+RIGHT JOIN movie mov ON mov.idmovie = msc.fkmovie
+GROUP BY mov.name;
+
+\echo 5. Selektiere die Zukünftigen Vorstellungen die von einem 12 jährigen Kind besucht werden dürfen.
+\echo -----------------------------------------------------
+SELECT msc.starttime, mov.name
+FROM moviescreening msc
+    JOIN movie mov ON mov.idmovie = msc.fkmovie
+WHERE msc.starttime > NOW()
+AND msc.fkmovie IN (
+SELECT mov.idmovie
+FROM movie mov
+WHERE mov.fsk <= 12);
+
+\echo 6. Selektiere die Zukünftigen Vorstellungen direkt von einer View
+\echo -----------------------------------------------------
+SELECT * FROM vw_upcomingScreenings;
+
+
+\echo 7. Anfrage mit einer unkorrelierte Unterabfrage - Alle Personen die ein Ticket bezogen haben
+SELECT firstname AS "Firstname"
+	  ,lastname AS "Lastname"
+FROM Person
+WHERE idperson = ANY (
+	SELECT DISTINCT v.idvisitor
+	FROM visitor v
+	INNER JOIN ticket t
+		ON v.idvisitor = t.fkvisitor
+);
+
+\echo 8. Anfrage von 6. als CTE - Alle Personen die ein Ticket bezogen haben
+WITH tmpvisitorwithticket (idvisitor) AS (
+	SELECT DISTINCT v.idvisitor
+		FROM visitor v
+		INNER JOIN ticket t
+			ON v.idvisitor = t.fkvisitor
+)
+SELECT firstname AS "Firstname"
+	  ,lastname AS "Lastname"
+FROM Person
+WHERE idperson = ANY (SELECT idvisitor FROM tmpvisitorwithticket);
+
+
+\echo 9. Anfrage mit einer Window-Funktion
+\echo    Alle Filme nach FSK gruppiert, 
+\echo    absteigend sortiert nach FSK,
+\echo    dann aufsteigend sortiert nach Filmtitel
+\echo    Die Filme sind innerhalb der Gruppierung durchnummeriert.
+SELECT ROW_NUMBER() 
+	OVER (
+		PARTITION BY fsk 
+		ORDER BY fsk DESC,
+		name
+	) 
+AS "Zeile",
+name AS "Filmtitel",
+fsk AS "FSK"
+FROM movie;

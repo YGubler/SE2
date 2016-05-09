@@ -4,7 +4,7 @@
   <local-check-config name="GoogleCheckstyle_costumized" location="C:\Users\Yanick\Dropbox\Schule\HSR\Module\SE2\FS2016\00_Eigene\Workspace\U11_CodeSmells-Refactoring-UnitTesting_TESTAT3\google.checks.xml" type="external" description="">
     <additional-data name="protect-config-file" value="false"/>
   </local-check-config>
-  <fileset name="all" enabled="true" check-config-name="GoogleCheckstyle_costumized" local="true">
+  <fileset name="all" enabled="true" check-config-name="Google Checks" local="false">
     <file-match-pattern match-pattern="." include-pattern="true"/>
   </fileset>
 </fileset-config>
