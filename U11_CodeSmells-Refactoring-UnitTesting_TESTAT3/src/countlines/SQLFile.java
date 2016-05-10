@@ -2,24 +2,25 @@ package countlines;
 
 import java.io.BufferedReader;
 
-public class SQLFile implements FileType {
-  public void doSQLLineCount(BufferedReader reader, LineCounter lineCounter) {
+public class SQLFile extends FileType {
+
+  @Override
+  public void lineCount(BufferedReader reader, LineCounterResults results) {
     char ch = ' ';
     char lastCh = ' ';
     boolean commentLine = false;
     boolean inSlashStarComment = false;
     boolean stillEmptyLine = true;
 
-    lineCounter.initCountingVariables();
-    lineCounter.readNextLine(reader);
-    ch = lineCounter.getChar(reader);
-    while (ch != lineCounter.EOF) {
+    readNextLine(reader, results);
+    ch = getChar(reader, results);
+    while (ch != EOF) {
 
-      if (ch == lineCounter.EOL) {
+      if (ch == EOL) {
         if (stillEmptyLine) {
-          lineCounter.emptyLineCount++;
+          results.emptyLineCount++;
         } else if (commentLine || inSlashStarComment) {
-          lineCounter.commentLineCount++;
+          results.commentLineCount++;
         }
         stillEmptyLine = true;
         commentLine = false;
@@ -51,17 +52,11 @@ public class SQLFile implements FileType {
           ;
         }
         if (stillEmptyLine) {
-          stillEmptyLine = lineCounter.checkIfLineIsStillEmpty(ch);
+          stillEmptyLine = checkIfLineIsStillEmpty(ch);
         }
       }
       lastCh = ch;
-      ch = lineCounter.getChar(reader);
+      ch = getChar(reader, results);
     }
-  }
-
-  @Override
-  public void lineCount(BufferedReader reader) {
-    // TODO Auto-generated method stub
-    
   }
 }

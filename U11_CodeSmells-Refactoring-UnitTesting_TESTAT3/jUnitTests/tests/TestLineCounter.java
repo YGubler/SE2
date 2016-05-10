@@ -9,64 +9,65 @@ import org.junit.Test;
 
 import countlines.JavaFile;
 import countlines.LineCounter;
+import countlines.LineCounterResults;
 import countlines.SQLFile;
+import countlines.SimpleFile;
 
 public class TestLineCounter {
   private static final int DEFAULT_TIMEOUT = 2000;
   
   @Test(timeout = DEFAULT_TIMEOUT)
   public void testDoJavaLineCount() {
-    LineCounter lineCounter = new LineCounter();
     int expTotalLine = 35;
     int expCommentLine = 1;
     int expEmptyLine = 10;
+    LineCounterResults results = new LineCounterResults();
     try(FileReader fr = new FileReader("testFiles/JavaTestFile.txt")){
       try(BufferedReader br = new BufferedReader(fr)){
         JavaFile javaFile = new JavaFile();
-        javaFile.doJavaLineCount(br, lineCounter);
-//        lineCounter.doJavaLineCount(br);
+        javaFile.lineCount(br, results);
       } 
     } catch (IOException e) {
       e.printStackTrace();
     }
-    assertEquals(expTotalLine, lineCounter.getTotalLineCount());
-    assertEquals(expCommentLine, lineCounter.getCommentLineCount());
-    assertEquals(expEmptyLine, lineCounter.getEmptyLineCount());
+    assertEquals(expTotalLine, results.getLineCount());
+    assertEquals(expCommentLine, results.getCommentLineCount());
+    assertEquals(expEmptyLine, results.getEmptyLineCount());
   }
   
   @Test(timeout = DEFAULT_TIMEOUT)
   public void testDoSQLLineCount() {
-    LineCounter lineCounter = new LineCounter();
     int expTotalLine = 87;
     int expCommentLine = 1;
     int expEmptyLine = 11;
+    LineCounterResults results = new LineCounterResults();
     try(FileReader fr = new FileReader("testFiles/SQLTestFile.txt")){
       try(BufferedReader br = new BufferedReader(fr)){
         SQLFile sqlFile = new SQLFile();
-        sqlFile.doSQLLineCount(br, lineCounter);
-//        lineCounter.doSQLLineCount(br);
+        sqlFile.lineCount(br, results);
       } 
     } catch (IOException e) {
       e.printStackTrace();
     }
-    assertEquals(expTotalLine, lineCounter.getTotalLineCount());
-    assertEquals(expCommentLine, lineCounter.getCommentLineCount());
-    assertEquals(expEmptyLine, lineCounter.getEmptyLineCount());
+    assertEquals(expTotalLine, results.getLineCount());
+    assertEquals(expCommentLine, results.getCommentLineCount());
+    assertEquals(expEmptyLine, results.getEmptyLineCount());
   }
   
   @Test(timeout = DEFAULT_TIMEOUT)
   public void testDoSimpleineCount() {
-    LineCounter lineCounter = new LineCounter();
     int expTotalLine = 45;
     int expEmptyLine = 19;
+    LineCounterResults results = new LineCounterResults();
     try(FileReader fr = new FileReader("testFiles/SimpleTestFile.pas")){
       try(BufferedReader br = new BufferedReader(fr)){
-        lineCounter.doSimpleLineCount(br);
+        SimpleFile simpleFile = new SimpleFile();
+        simpleFile.lineCount(br, results);
       } 
     } catch (IOException e) {
       e.printStackTrace();
     }
-    assertEquals(expTotalLine, lineCounter.getTotalLineCount());
-    assertEquals(expEmptyLine, lineCounter.getEmptyLineCount());
+    assertEquals(expTotalLine, results.getLineCount());
+    assertEquals(expEmptyLine, results.getEmptyLineCount());
   }
 }
