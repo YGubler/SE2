@@ -7,7 +7,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import countlines.JavaFile;
 import countlines.LineCounter;
+import countlines.SQLFile;
 
 public class TestLineCounter {
   private static final int DEFAULT_TIMEOUT = 2000;
@@ -20,7 +22,9 @@ public class TestLineCounter {
     int expEmptyLine = 10;
     try(FileReader fr = new FileReader("testFiles/JavaTestFile.txt")){
       try(BufferedReader br = new BufferedReader(fr)){
-        lineCounter.doJavaLineCount(br);
+        JavaFile javaFile = new JavaFile();
+        javaFile.doJavaLineCount(br, lineCounter);
+//        lineCounter.doJavaLineCount(br);
       } 
     } catch (IOException e) {
       e.printStackTrace();
@@ -38,7 +42,9 @@ public class TestLineCounter {
     int expEmptyLine = 11;
     try(FileReader fr = new FileReader("testFiles/SQLTestFile.txt")){
       try(BufferedReader br = new BufferedReader(fr)){
-        lineCounter.doSQLLineCount(br);
+        SQLFile sqlFile = new SQLFile();
+        sqlFile.doSQLLineCount(br, lineCounter);
+//        lineCounter.doSQLLineCount(br);
       } 
     } catch (IOException e) {
       e.printStackTrace();
