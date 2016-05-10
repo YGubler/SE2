@@ -1,5 +1,5 @@
 package tests;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.junit.Test;
 
 import countlines.JavaFile;
-import countlines.LineCounter;
 import countlines.LineCounterResults;
 import countlines.SQLFile;
 import countlines.SimpleFile;

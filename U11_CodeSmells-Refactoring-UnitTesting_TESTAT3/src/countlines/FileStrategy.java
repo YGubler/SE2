@@ -3,7 +3,7 @@ package countlines;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public abstract class FileType {
+public abstract class FileStrategy {
   static final char EOL = '\n';
   static final char EOF = '\0';
 

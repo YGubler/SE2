@@ -1,8 +1,8 @@
 package countlines;
 
-import javax.swing.table.AbstractTableModel;
-import java.io.*;
 import java.util.Vector;
+
+import javax.swing.table.AbstractTableModel;
 
 public class FileListTableModel extends AbstractTableModel {
 
@@ -20,6 +20,7 @@ public class FileListTableModel extends AbstractTableModel {
   private Vector vecEmptyLineCount = new Vector();
   private Vector vecTotalLineCount = new Vector();
   private int[] totals = new int[COLUMN_COUNT];
+  FileCollector fileCollector = new FileCollector();
 
   public FileListTableModel() {
   }
@@ -40,7 +41,7 @@ public class FileListTableModel extends AbstractTableModel {
     this.fileExtensions = fileExtensions;
     if (fileExtensions != null && !fileExtensions.isEmpty()) {
       initVariables();
-      collectFiles(startDirectory);
+      allFiles = fileCollector.collectFiles(startDirectory, fileExtensions);
       System.out.println("Starte dir scan: " + startDirectory);
       adaptGridSize(allFiles.size());
     }
@@ -75,38 +76,6 @@ public class FileListTableModel extends AbstractTableModel {
     }
     totalsCalculated = true;
     adaptGridSize(rowCount + 2);
-  }
-
-  private boolean hasRightExtension(String fileName) {
-    for (int i = 0; i < fileExtensions.size(); i++) {
-      if (fileName.toLowerCase().endsWith(fileExtensions.elementAt(i).toString())) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void collectFiles(String directory) {
-    if (!directory.endsWith("/") && !directory.endsWith("\\")) {
-      directory += "/";
-    }
-    File currentdir = new File(directory);
-    String[] theFiles = currentdir.list();
-    if (theFiles != null) {
-      for (String aFile : theFiles) {
-        String fileName = directory + aFile;
-        File f = new File(fileName);
-        if (f.isDirectory()) {
-          collectFiles(fileName + '/');
-        } else if (f.isFile() && f.canRead()) {
-          if (hasRightExtension(fileName)) {
-            allFiles.add(fileName);
-          }
-        } else {
-          System.out.println("?????" + fileName);
-        }
-      }
-    }
   }
 
   private void adaptGridSize(int newRowCount) {

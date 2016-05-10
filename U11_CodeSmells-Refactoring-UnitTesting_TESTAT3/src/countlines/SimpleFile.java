@@ -2,7 +2,7 @@ package countlines;
 
 import java.io.BufferedReader;
 
-public class SimpleFile extends FileType {
+public class SimpleFile extends FileStrategy {
 
   @Override
   public void lineCount(BufferedReader reader, LineCounterResults results) {

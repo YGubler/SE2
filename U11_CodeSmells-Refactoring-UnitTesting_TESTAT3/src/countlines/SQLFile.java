@@ -2,7 +2,7 @@ package countlines;
 
 import java.io.BufferedReader;
 
-public class SQLFile extends FileType {
+public class SQLFile extends FileStrategy {
 
   @Override
   public void lineCount(BufferedReader reader, LineCounterResults results) {
